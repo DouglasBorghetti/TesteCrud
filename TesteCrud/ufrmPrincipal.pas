@@ -1,0 +1,111 @@
+unit ufrmPrincipal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Data.Win.ADODB, Vcl.ExtCtrls,
+  Vcl.StdCtrls, Vcl.Mask, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids;
+
+type
+  TfrmPrincipal = class(TForm)
+    cnnProduto: TADOConnection;
+    tbProdutos: TADOTable;
+    tbProdutosid: TIntegerField;
+    tbProdutosname: TStringField;
+    tbProdutosprice: TBCDField;
+    tbProdutosqtd: TIntegerField;
+    pnlTopo: TPanel;
+    pnlCentro: TPanel;
+    pnlRodape: TPanel;
+    lbCodigo: TLabel;
+    edCodigo: TDBEdit;
+    dsProdutos: TDataSource;
+    lbProduto: TLabel;
+    edProduto: TDBEdit;
+    lbValor: TLabel;
+    edValor: TDBEdit;
+    lbQtd: TLabel;
+    edQtd: TDBEdit;
+    DBGrid1: TDBGrid;
+    btnSalvar: TButton;
+    btnCancel: TButton;
+    btnNovo: TButton;
+    btnEdit: TButton;
+    btnDelete: TButton;
+    procedure btnNovoClick(Sender: TObject);
+    procedure btnEditClick(Sender: TObject);
+    procedure btnDeleteClick(Sender: TObject);
+    procedure btnCancelClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmPrincipal: TfrmPrincipal;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmPrincipal.btnCancelClick(Sender: TObject);
+begin
+tbProdutos.Cancel;
+edProduto.ReadOnly := true;
+  edValor.ReadOnly := true;
+  edQtd.ReadOnly := true;
+end;
+
+procedure TfrmPrincipal.btnDeleteClick(Sender: TObject);
+begin
+if MessageDlg('Deseja deletar o produto?', mtConfirmation, [mbyes, mbno], 0) = mryes then
+  begin
+  tbProdutos.Delete;
+  end;
+end;
+
+procedure TfrmPrincipal.btnEditClick(Sender: TObject);
+begin
+tbProdutos.Edit;
+edProduto.SetFocus;
+edProduto.ReadOnly := false;
+  edValor.ReadOnly := false;
+  edQtd.ReadOnly := false;
+end;
+
+procedure TfrmPrincipal.btnNovoClick(Sender: TObject);
+begin
+  tbProdutos.Append;
+  edProduto.SetFocus;
+  edProduto.ReadOnly := false;
+  edValor.ReadOnly := false;
+  edQtd.ReadOnly := false;
+end;
+
+procedure TfrmPrincipal.btnSalvarClick(Sender: TObject);
+begin
+if MessageDlg('Deseja salvar o produto?', mtConfirmation, [mbyes, mbno], 0) = mryes then
+  begin
+  tbProdutos.Post;
+  edProduto.ReadOnly := true;
+  edValor.ReadOnly := true;
+  edQtd.ReadOnly := true;
+  end;
+end;
+
+procedure TfrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+tbProdutos.Close;
+end;
+
+procedure TfrmPrincipal.FormCreate(Sender: TObject);
+begin
+tbProdutos.Open;
+end;
+
+end.
